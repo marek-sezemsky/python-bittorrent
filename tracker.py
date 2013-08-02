@@ -17,11 +17,11 @@ def decode_request(path):
 	""" Return the decoded request string. """
 
 	# Strip off the start characters
-	if path[:1] == "?":
-		path = path[1:]
-	elif path[:2] == "/?":
-		path = path[2:]
-
+	# if path[:1] == "?":
+	# 	path = path[1:]
+	# elif path[:2] == "/?":
+	# 	path = path[2:]
+	path = path[path.find('?')+1:]
 	return parse_qs(path)
 
 def add_peer(torrents, info_hash, peer_id, ip, port):
@@ -83,7 +83,9 @@ class RequestHandler(BaseHTTPRequestHandler):
 		if not package:
 			s.send_error(403)
 			return
-
+		print s
+		print package
+		print s.path
 		# Get the necessary info out of the request
 		info_hash = package["info_hash"][0]
 		compact = bool(package["compact"][0])

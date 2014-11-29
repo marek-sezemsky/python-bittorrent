@@ -7,11 +7,11 @@ except ImportError:
 
 
 setup(
-    name='python-bittorrent',
+    name='twisted-bittorrent',
     version='0.1',
     description=(
-        'python-bittorent is a BitTorrent library, '
-        'written entirely in Python'),
-    packages=['bittorrent'],
-#    zip_safe=True,
+        'twisted-bittorent is a Twisted port of python-bittorrent BitTorrent library'),
+    packages=['twittorrent'],
+    requires=['twisted'],
+    zip_safe=True,
 )

@@ -9,7 +9,7 @@ from threading import Thread
 from time import sleep, time
 from urllib import urlencode, urlopen
 
-from util import collapse, slice_n
+from util import slice_n
 from bencode import decode, encode
 
 
@@ -26,19 +26,14 @@ def make_info_dict(file):
 
     piece_length = 524288  # TODO: This should change dependent on file size
 
-    info = {}
+    return {
+        "piece length": piece_length,
+        "length": len(contents),
+        "name": file,
+        "md5sum": md5(contents).hexdigest(),
+        "pieces": ''.join(sha1(p).digest() for p in slice_n(contents, piece_length))
+    }
 
-    info["piece length"] = piece_length
-    info["length"] = len(contents)
-    info["name"] = file
-    info["md5sum"] = md5(contents).hexdigest()
-
-    # Generate the pieces
-    pieces = slice_n(contents, piece_length)
-    pieces = [sha1(p).digest() for p in pieces]
-    info["pieces"] = collapse(pieces)
-
-    return info
 
 
 def make_torrent_file(file=None, tracker=None, comment=None):

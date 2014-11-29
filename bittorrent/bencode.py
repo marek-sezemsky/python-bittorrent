@@ -12,21 +12,19 @@ and encode data. """
 # Note: Bencoding specification:
 # http://www.bittorrent.org/beps/bep_0003.html
 
-from util import collapse
-
 
 def stringlength(string, index=0):
     """ Given a bencoded expression, starting with a string, returns
     the length of the string. """
 
     try:
-        colon = string.find(":", index)  # Find the colon, ending the number.
+        colon = string.index(":", index)  # Find the colon, ending the number.
     except ValueError:
         raise BencodeError("Decode", "Malformed expression", string)
 
     # Return a list of the number characters.
     num = [a for a in string[index:colon] if a.isdigit()]
-    n = int(collapse(num))  # Collapse them, and turn them into an int.
+    n = int(''.join(num))  # Collapse them, and turn them into an int.
 
     # Return the length of the number, colon, and the string length.
     return len(num) + 1 + n
@@ -148,16 +146,14 @@ class BencodeError(Exception):
 
     def __str__(self):
         """ Pretty-prints the information. """
-
-        return repr(self.mode + ": " + self.value + " : " + str(self.data))
+        return repr('%s: %s : %s' % (self.mode, self.value, self.data))
 
 
 def encode_int(data):
     """ Given an integer, returns a bencoded string of that integer. """
 
     check_type(data, int)
-
-    return "i" + str(data) + "e"
+    return 'i%se' % str(data)
 
 
 def decode_int(data):
@@ -187,7 +183,7 @@ def encode_str(data):
     check_type(data, str)
 
     # Return the length of the string, the colon, and the string itself.
-    return str(len(data)) + ":" + data
+    return '%s:%s' % (len(data), data)
 
 
 def decode_str(data):
@@ -197,7 +193,7 @@ def decode_str(data):
 
     # We want everything past the first colon.
     try:
-        colon = data.find(":")
+        colon = data.index(":")
     except ValueError:
         raise BencodeError("Decode", "Badly formed expression", data)
     # Up to the end of the data.
@@ -213,13 +209,13 @@ def encode_list(data):
     check_type(data, list)
 
     # Special case of an empty list.
-    if data == []:
+    if not data:
         return "le"
 
     # Encode each item in the list.
     temp = [encode(item) for item in data]
     # Add list annotation, and collapse the list.
-    return "l" + collapse(temp) + "e"
+    return "l%se" % ''.join(temp)
 
 
 def decode_list(data):
@@ -249,7 +245,7 @@ def encode_dict(data):
     # Encode each key and value for each key in the dictionary.
     temp = [encode_str(key) + encode(data[key]) for key in sorted(data.keys())]
     # Add dict annotation, and collapse the dictionary.
-    return "d" + collapse(temp) + "e"
+    return "d%se" % ''.join(temp)
 
 
 def decode_dict(data):

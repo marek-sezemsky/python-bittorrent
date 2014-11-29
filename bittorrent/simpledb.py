@@ -42,7 +42,12 @@ class Database():
         return loads(value)
 
     has_key = __contains__
-    get = __getitem__
+
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except:
+            return default
 
     def __setitem__(self, key, value):
         """ Set the value of key to the value given. """

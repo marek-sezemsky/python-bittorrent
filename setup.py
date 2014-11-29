@@ -12,12 +12,6 @@ setup(
     description=(
         'python-bittorent is a BitTorrent library, '
         'written entirely in Python'),
-    py_modules=[
-        'bencode',
-        'bittorrent',
-        'simpledb',
-        'torrent',
-        'tracker',
-        'util'],
-    zip_safe=True,
+    packages=['bittorrent'],
+#    zip_safe=True,
 )

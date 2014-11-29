@@ -12,6 +12,6 @@ setup(
     description=(
         'twisted-bittorent is a Twisted port of python-bittorrent BitTorrent library'),
     packages=['twittorrent'],
-    requires=['twisted'],
+    requires=['twisted', 'tornado'],
     zip_safe=True,
 )
